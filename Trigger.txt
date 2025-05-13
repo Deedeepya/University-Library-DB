@@ -1,0 +1,37 @@
+CREATE OR REPLACE TRIGGER NotifyOverdue
+--Trigger1
+AFTER UPDATE ON Loan
+FOR EACH ROW
+DECLARE
+    v_due_date DATE;
+    v_grace_period DATE;
+BEGIN
+    -- Fetch due date and grace period
+    SELECT DueDate, DueDate + INTERVAL '7' DAY
+    INTO v_due_date, v_grace_period
+    FROM Loan
+    WHERE Loan_ID = :NEW.Loan_ID;
+
+    -- Check if the book is still overdue
+    IF :NEW.ReturnDate IS NULL AND SYSDATE > v_grace_period THEN
+        -- Notify the member about the outstanding overdue book
+        INSERT INTO Inquiries (Member_ID, Librarian_ID)
+        VALUES (:NEW.Member_ID, NULL); -- Specify Librarian_ID if applicable
+    END IF;
+END NotifyOverdue;
+/
+
+
+--Trigger2
+CREATE OR REPLACE TRIGGER NotifyMembershipRenewal
+BEFORE UPDATE ON Other_Members
+FOR EACH ROW
+BEGIN
+    -- Check if the membership is about to expire (within a month)
+    IF :NEW.Card_expired = 'N' AND :NEW.Card_issued + INTERVAL '1' MONTH = SYSDATE THEN
+        -- Notify the member about the membership renewal
+        INSERT INTO Inquiries (Member_ID, Librarian_ID)
+        VALUES (:NEW.Member_ID, NULL); -- Specify Librarian_ID if applicable
+    END IF;
+END NotifyMembershipRenewal;
+/

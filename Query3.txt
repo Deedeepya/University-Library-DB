@@ -1,0 +1,17 @@
+SELECT
+    Books.Subject_Area,
+    Books.Author,
+    COUNT(Loan.Volume_ID) AS NumOfCopies,
+    (Loan.ReturnDate - Loan.IssueDate) AS DaysLoanedOut
+FROM
+    Loan
+JOIN
+    Volumes ON Loan.Volume_ID = Volumes.Volume_ID
+JOIN
+    Books ON Volumes.ISBN = Books.ISBN
+WHERE
+    Loan.IssueDate >= TRUNC(SYSDATE) - 7
+GROUP BY
+    Books.Subject_Area,
+    Books.Author,
+    (Loan.ReturnDate - Loan.IssueDate);
