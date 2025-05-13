@@ -1,0 +1,8 @@
+INSERT INTO EMPLOYEE (Fname, Minit, Lname, Ssn, Bdate, Address, Sex, Salary, Super_ssn, Dno)
+VALUES ('Cecilia', 'F', 'Kolonsky', '677678989', TO_DATE('1960-04-05', 'YYYY-MM-DD'), '6357 Windswept, Katy, TX', 'F', 28000, '987654321', 7);
+
+INSERT INTO WORKS_ON (Essn, Pno, Hours)
+VALUES ('444444401', 999, 40.0);
+
+INSERT INTO DEPT_LOCATIONS (DNUMBER, DLOCATION)
+VALUES (11, 'USA');

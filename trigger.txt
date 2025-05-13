@@ -1,0 +1,42 @@
+
+ALTER TABLE EMPLOYEE ADD OverTimeCount INT DEFAULT 0;
+
+
+
+CREATE OR REPLACE TRIGGER UpdateOverTimeCount
+FOR INSERT OR UPDATE ON WORKS_ON
+COMPOUND TRIGGER
+    TYPE EssnList IS TABLE OF WORKS_ON.Essn%TYPE;
+    essns EssnList := EssnList();
+    AFTER EACH ROW IS
+    BEGIN
+        IF INSERTING THEN
+            essns.EXTEND;
+            essns(essns.LAST) := :NEW.Essn;
+        END IF;
+    END AFTER EACH ROW;
+    AFTER STATEMENT IS
+    BEGIN
+        FOR i IN 1..essns.COUNT LOOP
+            DECLARE
+                empHours DECIMAL(4, 1);
+            BEGIN
+                SELECT SUM(Hours) INTO empHours
+                FROM WORKS_ON
+                WHERE Essn = essns(i);
+                IF empHours > 40 THEN
+                    UPDATE EMPLOYEE
+                    SET OverTimeCount = OverTimeCount + 1
+                    WHERE Ssn = essns(i);
+                END IF;
+            END;
+        END LOOP;
+    END AFTER STATEMENT;
+END UpdateOverTimeCount;
+/
+
+ALTER TRIGGER UpdateOverTimeCount COMPILE;
+
+INSERT INTO WORKS_ON (Essn, Pno, Hours) VALUES ('453453453', 1, 45);
+
+SELECT OverTimeCount FROM EMPLOYEE WHERE Ssn = '453453453';

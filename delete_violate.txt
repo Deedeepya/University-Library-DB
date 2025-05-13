@@ -1,0 +1,6 @@
+DELETE FROM DEPENDENT WHERE Essn = '444444401' AND Dependent_name = 'Amy Bayes' AND Sex = 'F' AND Bdate = TO_DATE('18-JUN-26', 'DD-MON-YY') AND Relationship = 'Children';
+
+DELETE FROM DEPARTMENT WHERE Dname = 'Research' AND Dnumber IS NULL AND Mgr_ssn = '333445555' AND Mgr_start_date = TO_DATE('22-MAY-78', 'DD-MON-YY');
+
+DELETE FROM DEPT_LOCATIONS
+WHERE DNUMBER = 12 AND DLOCATION = 'Houston';

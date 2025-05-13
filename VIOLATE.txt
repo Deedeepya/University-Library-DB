@@ -1,0 +1,9 @@
+INSERT INTO DEPENDENT (Essn, Dependent_name, Sex, Bdate, Relationship)
+VALUES ('444444401', 'Amy Bayes', 'F', TO_DATE('18-JUN-26', 'DD-MON-YY'), 'Children');
+
+
+INSERT INTO DEPARTMENT (Dname, Dnumber, Mgr_ssn, Mgr_start_date)
+VALUES ('Research', NULL, '333445555', TO_DATE('22-MAY-78', 'DD-MON-YY'));
+
+INSERT INTO DEPT_LOCATIONS (DNUMBER, DLOCATION)
+VALUES (12, 'Houston');
