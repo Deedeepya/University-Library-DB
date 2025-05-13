@@ -1,0 +1,5 @@
+1. Same record is already present in the dependent table so unique constraint is violated
+
+2. As the primary key is department table is null, here entity integrity constraint is violated.
+
+3. While inserting in dept_locations table as inserted dnumber is not present in department table here foreign key constraint is violated. 
