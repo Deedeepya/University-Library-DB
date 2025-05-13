@@ -1,0 +1,94 @@
+--1002070498-Dedeepya Nallamothu
+
+
+-- Members Table
+CREATE TABLE Members (
+    Member_ID INT PRIMARY KEY,
+    Campus_Address VARCHAR2(255),
+    SSN VARCHAR(20),
+    Home_Address VARCHAR2(255),
+    Phone_num VARCHAR2(20),
+    Books_Borrowed INT
+);
+
+-- Librarian Table
+CREATE TABLE Librarian (
+    ID INT PRIMARY KEY,
+    Name VARCHAR2(255),
+    Role VARCHAR2(255)
+);
+
+-- Books Table
+CREATE TABLE Books (
+    ISBN VARCHAR2(13) PRIMARY KEY,
+    Title VARCHAR2(255),
+    Author VARCHAR2(255), -- This should be a foreign key if normalized properly
+    Subject_Area VARCHAR2(255), -- This should be a separate table if normalized properly
+    No_of_Books INT,
+    IsAvailable CHAR(1) CHECK (IsAvailable IN ('Y', 'N'))
+);
+
+-- Volumes Table
+CREATE TABLE Volumes (
+    Volume_ID INT PRIMARY KEY,
+    ISBN VARCHAR2(13),
+    Status VARCHAR2(50),
+    Location VARCHAR2(255),
+    FOREIGN KEY (ISBN) REFERENCES Books(ISBN)
+);
+
+-- Loan Table
+CREATE TABLE Loan (
+    Loan_ID INT PRIMARY KEY,
+    Member_ID INT,
+    Volume_ID INT,
+    DueDate DATE,
+    ReturnDate DATE,
+    IssueDate DATE,
+    FOREIGN KEY (Member_ID) REFERENCES Members(Member_ID),
+    FOREIGN KEY (Volume_ID) REFERENCES Volumes(Volume_ID)
+);
+
+
+
+-- Catalog Table (assuming it should have its own unique identifier)
+CREATE TABLE Catalog (
+    Catalog_ID INT PRIMARY KEY,
+    ISBN VARCHAR2(13),
+    Description CLOB,
+    FOREIGN KEY (ISBN) REFERENCES Books(ISBN)
+);
+
+-- Other_Members Table
+CREATE TABLE Other_Members (
+    Member_ID INT PRIMARY KEY,
+    Card_expired CHAR(1) CHECK (Card_expired IN ('Y', 'N')),
+    Card_issued DATE,
+    FOREIGN KEY (Member_ID) REFERENCES Members(Member_ID)
+);
+
+-- Professor Table
+CREATE TABLE Professor (
+    Member_ID INT PRIMARY KEY,
+    Issued_ID DATE,
+    Expired_ID DATE,
+    FOREIGN KEY (Member_ID) REFERENCES Members(Member_ID)
+);
+
+-- Inquiries Table
+CREATE TABLE Inquiries (
+    Member_ID INT,
+    Librarian_ID INT,
+    PRIMARY KEY (Member_ID, Librarian_ID),
+    FOREIGN KEY (Member_ID) REFERENCES Members(Member_ID),
+    FOREIGN KEY (Librarian_ID) REFERENCES Librarian(ID)
+);
+
+-- Manages Table
+CREATE TABLE Manages (
+    Librarian_ID INT,
+    ISBN VARCHAR2(13),
+    PRIMARY KEY (Librarian_ID, ISBN),
+    FOREIGN KEY (Librarian_ID) REFERENCES Librarian(ID),
+    FOREIGN KEY (ISBN) REFERENCES Books(ISBN)
+);
